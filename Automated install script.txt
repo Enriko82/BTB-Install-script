@@ -1,0 +1,443 @@
+#!/bin/bash
+# This is an installation script for installing Binance Trade Bot on Oracle Free tier cloud, or Raspberry Pi or other Linux variants
+#
+# Copyright 2021 Enriko82
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#
+#
+# Instructions how to install:
+# Create a new instance in Oracle cloud or Raspberry
+# Make sure you can SSH into the server
+# Set here in which folder you would like the Bot to be installed:
+# By default the bot will be installed in the subfolder Binance1
+BinanceFolder=Binance1
+# Update in the end of this file below the following chapters, by completing the data needed
+# 1) Fill in below your user.cfg details.
+# 2) Fill in below your supported coins, which you would like to trade
+# 3) Fill in below your Telegram Bot ID's
+# Run the following commands in the SSH client
+# 		vi start.sh
+# Copy everything from this file into the VI screen. 
+# Press Esc button and Shift + ZZ
+# 		sudo chmod +x start.sh
+# 		./start.sh
+# if you want to install more bots, then update the Binancefolder variable, user.cfg, Supported coin list and apprise.yml section
+# and update start.sh to eg start2.sh
+# The script should run now and will ask you 2 questions
+# 1) Which Bot or Fork you would like to install
+# 2) On which system you will install it
+#
+# If you like this automated install script. Please go to:
+# https://www.buymeacoffee.com/Enriko82
+#
+#
+## Version updates
+# 1.0 17-05-2021
+# 1.1 23-05-2021 Updated working directory of BTB manager-telegram
+# 1.2 28-05-2021 Updated Oracle cloud to Oracle Linux cloud, updated user.cfg InstallScript=Enriko82_V1.2_20210528
+# 1.3 31-05-2021 Added NTP synch, added custom scripts of Onicniepytaj
+# 1.4 02-06-2021 Added TnTwist version as option, Updated binance user cfg for TnTwist version, added BinanceBotVersion=%Chosen version% for documentation
+# 1.5 06-06-2021 Added current install directory, Retrieve Username, added sqlite3 support
+#
+#
+# More information about the Binance Trade Bot can be found here
+# https://github.com/edeng23/binance-trade-bot
+# If you like the Binance trade Bot. Please go to here to support:
+# https://www.buymeacoffee.com/edeng 
+#
+# More information about the Binance Trade Bot Manager Telegram can be found here
+# https://github.com/lorcalhost/BTB-manager-telegram
+# If you like the Binance Trade Bot Manager Telegram. Please go to here to support:
+# https://www.buymeacoffee.com/lorcalhost
+#
+# End instructions
+########################################################################################################################################################
+
+########################################################################################################################################################
+# 
+#
+PS3='Please enter your choice: '
+options=("Edeng32 Master" "Idkravitz master" "TnTwist master" "Specific Branch" "Quit")
+select opt in "${options[@]}"
+do
+    case $opt in
+        "Edeng32 Master")
+		BinanceBot="git clone https://github.com/edeng23/binance-trade-bot.git"
+        	BinanceBotVersion="Edeng 23 Master"
+		echo "Binance trading bot will be installed with ${BinanceBot}"
+            	break
+			;;
+        "Idkravitz master")
+            	BinanceBot="git clone https://github.com/idkravitz/binance-trade-bot.git"
+        	BinanceBotVersion="Idkravitz master"
+		echo "Binance trading bot will be installed with ${BinanceBot}"
+		break
+           ;;   
+        "TnTwist master")
+            	BinanceBot="git clone https://github.com/tntwist/binance-trade-bot.git"
+        	BinanceBotVersion="TnTwist master"
+		echo "Binance trading bot will be installed with ${BinanceBot}"
+		break
+           ;;
+        "Specific Branch")
+		BinanceBot="git clone -b websockets-idkravitz --single-branch https://github.com/idkravitz/binance-trade-bot.git"
+        	BinanceBotVersion="Specif branch"
+           	echo "Binance trading bot will be installed with ${BinanceBot}"
+		break
+            ;;
+        "Quit")
+            break
+            ;;
+        *) echo "invalid option $REPLY";;
+    esac
+done
+
+########################################################################################################################################################
+# Install type choice
+
+PS4='Please enter your choice: '
+options1=("Oracle Linux Cloud" "Raspberry Pi" "Manual (Other)" "Quit")
+select opt in "${options1[@]}"
+do
+    case $opt in
+        "Oracle Linux Cloud")
+			UserBot="$USER"
+			echo "User name is ${UserBot}"
+			################################
+			#Default Kernel updates and mandatory software installation
+			#
+			sudo yum update -y 
+			sudo yum install git -y
+			sudo yum install ntp -y
+			sudo yum install sqlite3 -y
+			sudo -H pip3 install --upgrade pip
+			pip install cryptography==3.2.1
+			pip install pyOpenSSL==19.1.0
+			pip install python-dateutil==3.0.0
+			pip install configparser==4.0.2
+			break
+			;;
+        "Raspberry Pi")
+            		UserBot="$USER"
+			echo "User name is ${UserBot}"
+			sudo apt update
+			sudo apt-get update
+			sudo apt install ntp -y
+			sudo apt install git python3 idle3 python3-pip sqlite3
+			break
+           ;;
+        "Manual (Other)")
+            		#Setting current username for services
+			UserBot="$USER"
+			echo "User name is ${UserBot}"
+			echo Following updates are not tested!
+			sleep 10s 
+			sudo apt update
+			sudo apt-get update
+			sudo apt install ntp -y
+			sudo apt install git python3 idle3 python3-pip sqlite3
+			break
+            ;;
+        "Quit")
+            break
+            ;;
+        *) echo "invalid option $REPLY";;
+    esac
+done
+
+########################################################################################################################################################
+## If $1 is not passed, set to the current working dir using $PWD
+# Set current directory as install directory
+_dir="${1:-${PWD}}"
+ 
+## Die if $dir does not exists
+[ ! -d "$_dir" ] && { echo "Error: Directory $_dir not found."; exit 2; }
+ 
+
+
+
+########################################################################################################################################################
+#This will create the folder where the Binance Bot will be installed in.
+#
+mkdir $BinanceFolder
+cd $BinanceFolder
+
+
+########################################################################################################################################################
+#This will install Git and install the BOTS
+#
+git init
+$BinanceBot
+git clone https://github.com/lorcalhost/BTB-manager-telegram.git
+cd binance-trade-bot
+pip3 install -r requirements.txt
+cd ..
+cd BTB-manager-telegram
+pip3 install -r requirements.txt
+
+
+########################################################################################################################################################
+# Setting variables for installation folders for automated service installation and custom scripts
+# 
+#
+
+WorkingDirectoryBot="${_dir}/${BinanceFolder}/binance-trade-bot"
+WorkingDirectoryTelegram="${_dir}/${BinanceFolder}/BTB-manager-telegram"
+DescriptionBot="Binance Trade Bot - ${BinanceFolder}"
+DescriptionTelegram="BTB-manager-telegram - ${BinanceFolder}"
+
+########################################################################################################################################################
+# Start Custom script section
+# Create custom script folder and custom script file for BTB manager Telegram
+# Scripts created by Onicniepytaj
+#
+mkdir -p ${WorkingDirectoryTelegram}/custom_scripts
+
+##################################################################
+# Create Custom Script file, which will be called in telegram bot
+#
+cat <<EOF >${WorkingDirectoryTelegram}/config/custom_scripts.json
+{
+  " Current coin progress": "custom_scripts/current_coin_progress.sh",
+  " All coins progress": "custom_scripts/all_coins_progress.sh",
+  "隸 Appreciate Masa": "echo Masa is great"
+}
+EOF
+
+
+##################################################################
+# Create Current_coin_progress.sh file
+#
+cat <<'EOF' >${WorkingDirectoryTelegram}/custom_scripts/current_coin_progress.sh
+#!/bin/bash
+sqlite3 ../binance-trade-bot/data/crypto_trading.db "select id,alt_trade_amount, datetime, alt_coin_id from trade_history where selling=0 and state='COMPLETE' and alt_coin_id=(select alt_coin_id from trade_history order by id DESC limit 1);" > results
+starting_value=$(sed -n '1p' results| awk -F\| '{print $2}')
+while read p; do
+   echo -n "Trade no: "
+   echo $p | awk -F\| '{print $1}'
+   echo -n "Hodlings: "
+   echo $p | awk -F\| '{print $2}'
+   echo -n "Date: "
+   echo $p | awk -F\| '{print $3}'
+   echo -n "Grow: "
+   value=$(echo $p | awk -F\| '{print $2}')
+   grow=$(awk "BEGIN {print ($value/$starting_value*100)-100}")
+   echo -n $grow
+   echo "%"
+   echo
+done <results
+
+echo -n "Current coin: "
+echo $(sed -n '1p' results| awk -F\| '{print $4}')
+EOF
+sudo chmod +x ${WorkingDirectoryTelegram}/custom_scripts/current_coin_progress.sh
+
+##################################################################
+# Create all_coin_progress.sh file
+#
+cat <<'EOF' >${WorkingDirectoryTelegram}/custom_scripts/all_coins_progress.sh
+#!/bin/bash
+DATABASE=../binance-trade-bot/data/crypto_trading.db
+while read p; do
+   echo -n "Coin: "
+   echo $p
+   jumps=$(sqlite3 $DATABASE "select count(id) from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE';")
+   if [[ $jumps -gt 0 ]]
+   then
+	first_date=$(sqlite3 $DATABASE "select datetime from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE' order by id asc limit 1;")
+	echo -n "First coin bought at: "
+	echo $first_date
+     echo -n "Starting value: "
+     first_value=$(sqlite3 $DATABASE "select alt_trade_amount from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE' order by id asc limit 1;")
+     echo $first_value
+     echo -n "Last value: "
+     last_value=$(sqlite3 $DATABASE "select alt_trade_amount from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE' order by id DESC limit 1;")
+     echo $last_value
+     echo -n "Grow: "
+     grow=$(awk "BEGIN {print ($last_value/$first_value*100)-100}")
+     echo -n $grow
+     echo "%"	
+	echo -n "Starting value: "
+	crypto_coin_id=$(sqlite3 $DATABASE "select crypto_coin_id from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE' order by id asc limit 1;")
+	first_value2=$(sqlite3 $DATABASE "select crypto_trade_amount from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE' order by id asc limit 1;")
+	echo -n $first_value2
+     echo -n " "
+     echo $crypto_coin_id
+     echo -n "Last value: "
+     last_value2=$(sqlite3 $DATABASE "select crypto_trade_amount  from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE' order by id DESC limit 1;")
+     echo -n $last_value2
+     echo -n " "
+     echo $crypto_coin_id
+     echo -n "Grow: "
+     grow=$(awk "BEGIN {print ($last_value2/$first_value2*100)-100}")
+     echo -n $grow
+     echo "%"
+	echo -n "Number of trades: "
+	echo $jumps
+   else
+     echo "Coin has not yet been bought"
+   fi
+     echo
+done <../binance-trade-bot/supported_coin_list
+EOF
+sudo chmod +x ${WorkingDirectoryTelegram}/custom_scripts/all_coins_progress.sh
+
+# End Custom script section
+########################################################################################################################################################
+
+
+
+########################################################################################################################################################
+# Start Service creation section
+# This will create the Binance Bot services at startup
+# Create a file BTB${BinanceFolder}.service with the following:
+#
+
+cat <<EOF >BTB${BinanceFolder}.service
+[Unit]
+Description=${DescriptionBot}
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 -u -m binance_trade_bot
+WorkingDirectory=${WorkingDirectoryBot}
+StandardOutput=inherit
+StandardError=inherit
+Restart=on-failure
+User=${UserBot}
+
+[Install]
+WantedBy=multi-user.target
+EOF
+sudo mv BTB${BinanceFolder}.service /etc/systemd/system/BTB${BinanceFolder}.service
+sudo systemctl start BTB${BinanceFolder}.service
+sudo systemctl enable BTB${BinanceFolder}.service
+
+
+##################################################################
+#This will create the telegram service at startup
+#
+
+cat <<EOF >BTBTelegram${BinanceFolder}.service
+[Unit]
+Description=${DescriptionTelegram}
+After=network.target BTB${BinanceFolder}.service
+
+[Service]
+ExecStart=/usr/bin/python3 -u -m btb_manager_telegram -p "../binance-trade-bot"
+WorkingDirectory=${WorkingDirectoryTelegram}
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=${UserBot}
+
+[Install]
+WantedBy=multi-user.target
+EOF
+sudo mv BTBTelegram${BinanceFolder}.service /etc/systemd/system/BTBTelegram${BinanceFolder}.service
+sudo systemctl start BTBTelegram${BinanceFolder}.service
+sudo systemctl enable BTBTelegram${BinanceFolder}.service
+
+# End Service creation section
+########################################################################################################################
+
+
+
+
+
+################################################################################################################################################
+# Start User parameters Fill in field section
+# User parameter setup. Fill in your details here
+# 1) Fill in below your user.cfg details.
+# Update your API keys and your bridge coins. The rest can be kept as default
+#
+#
+cat <<EOF >${WorkingDirectoryBot}/user.cfg 
+[binance_user_config]
+api_key=vmPUZE6mv9SD5VNHkasf324232zvsw0MuIgu91duEh8A
+api_secret_key=NhqPtmdSJYdKjVHjA7asdfasd333R5YNiP1e3UZjInClVN65XAj0j
+current_coin=
+bridge=USDT
+tld=com
+hourToKeepScoutHistory=1
+scout_multiplier=5
+scout_sleep_time=1
+strategy=multiple_coins
+buy_timeout=10
+sell_timeout=10
+buy_order_type=limit
+sell_order_type=market
+BinanceBotVersion=${BinanceBotVersion}
+AdditionalParameters=Below_is_only_for_TnTwist_Master
+sell_max_price_change=0.005
+buy_max_price_change=0.005
+price_type=orderbook
+max_idle_hours=6
+InstallScript=Enriko82_V1.5_20210606
+EOF
+
+##################################################################
+# 2) Fill in below your supported coins, which you would like to trade
+# Note: EOF is not a coin, but End Of File for creating the Supported Coin List file
+#
+cat <<EOF >${WorkingDirectoryBot}/supported_coin_list
+ADA
+ATOM
+BAT
+BTT
+DASH
+EOS
+ETC
+ICX
+IOTA
+NEO
+OMG
+ONT
+QTUM
+TRX
+VET
+XLM
+XMR
+EOF
+
+##################################################################
+# 3) Fill in below your Telegram Bot ID's
+#
+
+
+cat <<EOF >${WorkingDirectoryBot}/config/apprise.yml
+# Define version
+version: 1
+# Define your URLs (Mandatory!)
+# URLs should start with - (remove the comment symbol #)
+# Replace the values with your tokens/ids
+# For example a telegram URL would look like:
+# - tgram://123456789:AABx8iXjE5C-vG4SDhf6ARgdFgxYxhuHb4A/-606743502
+urls:
+- tgram://TOKEN/CHAT_ID
+  # - discord://WebhookID/WebhookToken/
+  # - slack://tokenA/tokenB/tokenC
+  # More options here: https://github.com/caronc/apprise
+EOF
+
+
+#
+# End User parameters Fill in field section
+# End of script
+###########################################################
+echo "Press now ESC and then Shift + ZZ"
+echo "Reboot your server with: sudo shutdown -r"
+echo "Thanks for using the script of Enriko82"
