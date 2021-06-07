@@ -223,7 +223,7 @@ EOF
 #
 cat <<'EOF' >${WorkingDirectoryTelegram}/custom_scripts/current_coin_progress.sh
 #!/bin/bash
-sqlite3 ../binance-trade-bot/data/crypto_trading.db "select id,alt_trade_amount, datetime, alt_coin_id from trade_history where selling=0 and state='COMPLETE' and alt_coin_id=(select alt_coin_id from trade_history order by id DESC limit 1);" > results
+sqlite3 -cmd '.timeout 1000' ../binance-trade-bot/data/crypto_trading.db "select id,alt_trade_amount, datetime, alt_coin_id from trade_history where selling=0 and state='COMPLETE' and alt_coin_id=(select alt_coin_id from trade_history order by id DESC limit 1);" > results
 starting_value=$(sed -n '1p' results| awk -F\| '{print $2}')
 while read p; do
    echo -n "Trade no: "
@@ -254,30 +254,30 @@ DATABASE=../binance-trade-bot/data/crypto_trading.db
 while read p; do
    echo -n "Coin: "
    echo $p
-   jumps=$(sqlite3 $DATABASE "select count(id) from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE';")
+   jumps=$(sqlite3 -cmd '.timeout 1000' $DATABASE "select count(id) from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE';")
    if [[ $jumps -gt 0 ]]
    then
-	first_date=$(sqlite3 $DATABASE "select datetime from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE' order by id asc limit 1;")
+	first_date=$(sqlite3 -cmd '.timeout 1000' $DATABASE "select datetime from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE' order by id asc limit 1;")
 	echo -n "First coin bought at: "
 	echo $first_date
      echo -n "Starting value: "
-     first_value=$(sqlite3 $DATABASE "select alt_trade_amount from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE' order by id asc limit 1;")
+     first_value=$(sqlite3 -cmd '.timeout 1000' $DATABASE "select alt_trade_amount from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE' order by id asc limit 1;")
      echo $first_value
      echo -n "Last value: "
-     last_value=$(sqlite3 $DATABASE "select alt_trade_amount from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE' order by id DESC limit 1;")
+     last_value=$(sqlite3 -cmd '.timeout 1000' $DATABASE "select alt_trade_amount from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE' order by id DESC limit 1;")
      echo $last_value
      echo -n "Grow: "
      grow=$(awk "BEGIN {print ($last_value/$first_value*100)-100}")
      echo -n $grow
      echo "%"	
 	echo -n "Starting value: "
-	crypto_coin_id=$(sqlite3 $DATABASE "select crypto_coin_id from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE' order by id asc limit 1;")
-	first_value2=$(sqlite3 $DATABASE "select crypto_trade_amount from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE' order by id asc limit 1;")
+	crypto_coin_id=$(sqlite3 -cmd '.timeout 1000' $DATABASE "select crypto_coin_id from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE' order by id asc limit 1;")
+	first_value2=$(sqlite3 -cmd '.timeout 1000' $DATABASE "select crypto_trade_amount from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE' order by id asc limit 1;")
 	echo -n $first_value2
      echo -n " "
      echo $crypto_coin_id
      echo -n "Last value: "
-     last_value2=$(sqlite3 $DATABASE "select crypto_trade_amount  from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE' order by id DESC limit 1;")
+     last_value2=$(sqlite3 -cmd '.timeout 1000' $DATABASE "select crypto_trade_amount  from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE' order by id DESC limit 1;")
      echo -n $last_value2
      echo -n " "
      echo $crypto_coin_id
