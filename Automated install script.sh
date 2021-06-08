@@ -109,7 +109,7 @@ done
 # Install type choice
 
 PS4='Please enter your choice: '
-options1=("Oracle Linux Cloud" "Raspberry Pi" "Manual (Other)" "Quit")
+options1=("Oracle Linux Cloud" "Oracle Linux Cloud (VM.Standard.A1.Flex)" "Raspberry Pi" "Manual (Other)" "Quit")
 select opt in "${options1[@]}"
 do
     case $opt in
@@ -130,7 +130,28 @@ do
 			pip install configparser==4.0.2
 			break
 			;;
-        "Raspberry Pi")
+	"Oracle Linux Cloud (VM.Standard.A1.Flex)")
+			UserBot="$USER"
+			echo "User name is ${UserBot}"
+			################################
+			#Default Kernel updates and mandatory software installation
+			#
+			sudo yum update -y 
+			pip install python-dateutil==3.0.0
+			sudo yum install git ntp -y
+			pip3 install --upgrade pip
+			sudo yum install python-devel python36-devel openssl-devel libffi-devel libevent-devel -y
+			sudo easy_install gevent
+			pip install configparser==4.0.2
+			pip install wheel
+			pip install pyYAML==5.3.1
+			pip install pyOpenSSL==19.1.0
+			pip install six==1.14.0
+			pip install cryptography==3.2.1
+
+			break
+			;;
+	"Raspberry Pi")
             		UserBot="$USER"
 			echo "User name is ${UserBot}"
 			sudo apt update
