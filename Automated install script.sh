@@ -179,8 +179,7 @@ cd $BinanceFolder
 ########################################################################################################################################################
 #This will install Git and install the BOTS
 #
-git init
-$BinanceBot
+git init $BinanceBot
 git clone https://github.com/lorcalhost/BTB-manager-telegram.git
 cd binance-trade-bot
 pip3 install -r requirements.txt
@@ -213,7 +212,7 @@ cat <<EOF >${WorkingDirectoryTelegram}/config/custom_scripts.json
 {
   " Current coin progress": "custom_scripts/current_coin_progress.sh",
   " All coins progress": "custom_scripts/all_coins_progress.sh",
-  "隸 Appreciate Masa": "echo Masa is great"
+  "隸 Appreciate Masa": "echo Masa is great"
 }
 EOF
 
