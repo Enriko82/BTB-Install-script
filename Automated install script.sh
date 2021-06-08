@@ -179,7 +179,8 @@ cd $BinanceFolder
 ########################################################################################################################################################
 #This will install Git and install the BOTS
 #
-git init $BinanceBot
+git init  
+$BinanceBot
 git clone https://github.com/lorcalhost/BTB-manager-telegram.git
 cd binance-trade-bot
 pip3 install -r requirements.txt
