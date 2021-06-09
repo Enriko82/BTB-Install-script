@@ -137,18 +137,17 @@ do
 			#Default Kernel updates and mandatory software installation
 			#
 			sudo yum update -y 
-			pip install python-dateutil==3.0.0
-			sudo yum install git ntp -y
-			pip3 install --upgrade pip
+			sudo pip3 install --upgrade pip
+			pip3 install oci-cli --upgrade
+			pip3 install python-dateutil
+			sudo yum install git sqlite ntp -y
 			sudo yum install python-devel python36-devel openssl-devel libffi-devel libevent-devel -y
-			sudo easy_install gevent
-			pip install configparser==4.0.2
-			pip install wheel
-			pip install pyYAML==5.3.1
-			pip install pyOpenSSL==19.1.0
-			pip install six==1.14.0
-			pip install cryptography==3.2.1
-
+			# pip install pyYAML==5.3.1
+			# pip install configparser==4.0.2
+			pip3 install wheel
+			# pip3 install pyOpenSSL==19.1.0
+			# pip3 install six==1.14.0
+			# pip install cryptography==3.2.1
 			break
 			;;
 	"Raspberry Pi")
