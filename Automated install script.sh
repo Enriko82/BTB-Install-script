@@ -30,6 +30,7 @@ BinanceFolder=Binance1
 # 3) Fill in below your Telegram Bot ID's
 # Run the following commands in the SSH client
 # 		vi start.sh
+# Press insert or i to go into edit mode
 # Copy everything from this file into the VI screen. 
 # Press Esc button and Shift + ZZ
 # 		sudo chmod +x start.sh
