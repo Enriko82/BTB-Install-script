@@ -51,6 +51,7 @@ BinanceFolder=Binance1
 # 1.3 31-05-2021 Added NTP synch, added custom scripts of Onicniepytaj
 # 1.4 02-06-2021 Added TnTwist version as option, Updated binance user cfg for TnTwist version, added BinanceBotVersion=%Chosen version% for documentation
 # 1.5 06-06-2021 Added current install directory, Retrieve Username, added sqlite3 support
+# 1.6 09-06-2021 Added installation on Oracle Linux Cloud (VM.Standard.A1.Flex)
 #
 #
 # More information about the Binance Trade Bot can be found here
@@ -210,7 +211,8 @@ pip3 install -r requirements.txt
 
 
 ########################################################################################################################################################
-# Setting variables for installation folders for automated service installation and custom scripts
+# Setting variables for installation folders for automated service installation 
+# custom scripts install is moved to: https://github.com/Enriko82/BTB-Install-script/blob/main/BTB_Telegram_custom_Script.sh
 # 
 #
 
@@ -218,106 +220,6 @@ WorkingDirectoryBot="${_dir}/${BinanceFolder}/binance-trade-bot"
 WorkingDirectoryTelegram="${_dir}/${BinanceFolder}/BTB-manager-telegram"
 DescriptionBot="Binance Trade Bot - ${BinanceFolder}"
 DescriptionTelegram="BTB-manager-telegram - ${BinanceFolder}"
-
-########################################################################################################################################################
-# Start Custom script section
-# Create custom script folder and custom script file for BTB manager Telegram
-# Scripts created by Onicniepytaj
-#
-mkdir -p ${WorkingDirectoryTelegram}/custom_scripts
-
-##################################################################
-# Create Custom Script file, which will be called in telegram bot
-#
-cat <<EOF >${WorkingDirectoryTelegram}/config/custom_scripts.json
-{
-  " Current coin progress": "custom_scripts/current_coin_progress.sh",
-  " All coins progress": "custom_scripts/all_coins_progress.sh",
-  "隸 Appreciate Masa": "echo Masa is great"
-}
-EOF
-
-
-##################################################################
-# Create Current_coin_progress.sh file
-#
-cat <<'EOF' >${WorkingDirectoryTelegram}/custom_scripts/current_coin_progress.sh
-#!/bin/bash
-sqlite3 -cmd '.timeout 1000' ../binance-trade-bot/data/crypto_trading.db "select id,alt_trade_amount, datetime, alt_coin_id from trade_history where selling=0 and state='COMPLETE' and alt_coin_id=(select alt_coin_id from trade_history order by id DESC limit 1);" > results
-starting_value=$(sed -n '1p' results| awk -F\| '{print $2}')
-while read p; do
-   echo -n "Trade no: "
-   echo $p | awk -F\| '{print $1}'
-   echo -n "Hodlings: "
-   echo $p | awk -F\| '{print $2}'
-   echo -n "Date: "
-   echo $p | awk -F\| '{print $3}'
-   echo -n "Grow: "
-   value=$(echo $p | awk -F\| '{print $2}')
-   grow=$(awk "BEGIN {print ($value/$starting_value*100)-100}")
-   echo -n $grow
-   echo "%"
-   echo
-done <results
-
-echo -n "Current coin: "
-echo $(sed -n '1p' results| awk -F\| '{print $4}')
-EOF
-sudo chmod +x ${WorkingDirectoryTelegram}/custom_scripts/current_coin_progress.sh
-
-##################################################################
-# Create all_coin_progress.sh file
-#
-cat <<'EOF' >${WorkingDirectoryTelegram}/custom_scripts/all_coins_progress.sh
-#!/bin/bash
-DATABASE=../binance-trade-bot/data/crypto_trading.db
-while read p; do
-   echo -n "Coin: "
-   echo $p
-   jumps=$(sqlite3 -cmd '.timeout 1000' $DATABASE "select count(id) from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE';")
-   if [[ $jumps -gt 0 ]]
-   then
-	first_date=$(sqlite3 -cmd '.timeout 1000' $DATABASE "select datetime from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE' order by id asc limit 1;")
-	echo -n "First coin bought at: "
-	echo $first_date
-     echo -n "Starting value: "
-     first_value=$(sqlite3 -cmd '.timeout 1000' $DATABASE "select alt_trade_amount from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE' order by id asc limit 1;")
-     echo $first_value
-     echo -n "Last value: "
-     last_value=$(sqlite3 -cmd '.timeout 1000' $DATABASE "select alt_trade_amount from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE' order by id DESC limit 1;")
-     echo $last_value
-     echo -n "Grow: "
-     grow=$(awk "BEGIN {print ($last_value/$first_value*100)-100}")
-     echo -n $grow
-     echo "%"	
-	echo -n "Starting value: "
-	crypto_coin_id=$(sqlite3 -cmd '.timeout 1000' $DATABASE "select crypto_coin_id from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE' order by id asc limit 1;")
-	first_value2=$(sqlite3 -cmd '.timeout 1000' $DATABASE "select crypto_trade_amount from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE' order by id asc limit 1;")
-	echo -n $first_value2
-     echo -n " "
-     echo $crypto_coin_id
-     echo -n "Last value: "
-     last_value2=$(sqlite3 -cmd '.timeout 1000' $DATABASE "select crypto_trade_amount  from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE' order by id DESC limit 1;")
-     echo -n $last_value2
-     echo -n " "
-     echo $crypto_coin_id
-     echo -n "Grow: "
-     grow=$(awk "BEGIN {print ($last_value2/$first_value2*100)-100}")
-     echo -n $grow
-     echo "%"
-	echo -n "Number of trades: "
-	echo $jumps
-   else
-     echo "Coin has not yet been bought"
-   fi
-     echo
-done <../binance-trade-bot/supported_coin_list
-EOF
-sudo chmod +x ${WorkingDirectoryTelegram}/custom_scripts/all_coins_progress.sh
-
-# End Custom script section
-########################################################################################################################################################
-
 
 
 ########################################################################################################################################################
@@ -400,13 +302,14 @@ buy_timeout=10
 sell_timeout=10
 buy_order_type=limit
 sell_order_type=market
-BinanceBotVersion=${BinanceBotVersion}
-AdditionalParameters=Below_is_only_for_TnTwist_Master
+#BinanceBotVersion=${BinanceBotVersion}
+#BinanceBotInstallFolder=${BinanceFolder}
+#AdditionalParameters=Below_is_only_for_TnTwist_Master
 sell_max_price_change=0.005
 buy_max_price_change=0.005
 price_type=orderbook
 max_idle_hours=6
-InstallScript=Enriko82_V1.5_20210606
+#InstallScript=Enriko82_V1.6_20210609
 EOF
 
 ##################################################################
