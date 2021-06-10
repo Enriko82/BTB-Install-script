@@ -53,7 +53,7 @@ BinanceFolder=Binance1
 # 1.4 02-06-2021 Added TnTwist version as option, Updated binance user cfg for TnTwist version, added BinanceBotVersion=%Chosen version% for documentation
 # 1.5 06-06-2021 Added current install directory, Retrieve Username, added sqlite3 support
 # 1.6 09-06-2021 Added installation on Oracle Linux Cloud (VM.Standard.A1.Flex) up to 4 CPU and 24 GB of RAM
-#
+# 1.7 10-06-2021 Added TA-Lib preparation, added Mila432 (Homersimpson) version
 #
 # More information about the Binance Trade Bot can be found here
 # https://github.com/edeng23/binance-trade-bot
@@ -72,7 +72,7 @@ BinanceFolder=Binance1
 # 
 #
 PS3='Please enter your choice: '
-options=("Edeng32 Master" "Idkravitz master" "TnTwist master" "Specific Branch" "Quit")
+options=("Edeng32 Master" "Idkravitz master" "TnTwist master" "Mila432 (Homersimpson) master" "Specific Branch" "Quit")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -94,6 +94,12 @@ do
 		echo "Binance trading bot will be installed with ${BinanceBot}"
 		break
            ;;
+        "Mila432 (Homersimpson) master")
+            	BinanceBot="https://github.com/Mila432/binance-trade-bot.git"
+        	BinanceBotVersion="Mila432 (Homersimpson) master"
+		echo "Binance trading bot will be installed with ${BinanceBot}"
+		break
+           ;;	   
         "Specific Branch")
 		BinanceBot="git clone -b websockets-idkravitz --single-branch https://github.com/idkravitz/binance-trade-bot.git"
         	BinanceBotVersion="Specif branch"
@@ -122,10 +128,8 @@ do
 			#Default Kernel updates and mandatory software installation
 			#
 			sudo yum update -y 
-			sudo yum install git -y
-			sudo yum install ntp -y
-			sudo yum install sqlite3 -y
 			sudo -H pip3 install --upgrade pip
+			sudo yum install git sqlite3 ntp python-devel python36-devel openssl-devel libffi-devel libevent-devel -y
 			pip install cryptography==3.2.1
 			pip install pyOpenSSL==19.1.0
 			pip install python-dateutil==3.0.0
@@ -142,8 +146,7 @@ do
 			sudo pip3 install --upgrade pip
 			pip3 install oci-cli --upgrade
 			pip3 install python-dateutil
-			sudo yum install git sqlite ntp -y
-			sudo yum install python-devel python36-devel openssl-devel libffi-devel libevent-devel -y
+			sudo yum install git sqlite ntp python-devel python36-devel openssl-devel libffi-devel libevent-devel -y
 			pip3 install wheel
 			break
 			;;
@@ -183,29 +186,6 @@ _dir="${1:-${PWD}}"
 ## Die if $dir does not exists
 [ ! -d "$_dir" ] && { echo "Error: Directory $_dir not found."; exit 2; }
  
-
-
-
-########################################################################################################################################################
-#This will create the folder where the Binance Bot will be installed in.
-#
-mkdir $BinanceFolder
-cd $BinanceFolder
-
-
-########################################################################################################################################################
-#This will install Git and install the BOTS
-#
-git init  
-$BinanceBot
-git clone https://github.com/lorcalhost/BTB-manager-telegram.git
-cd binance-trade-bot
-pip3 install -r requirements.txt
-cd ..
-cd BTB-manager-telegram
-pip3 install -r requirements.txt
-
-
 ########################################################################################################################################################
 # Setting variables for installation folders for automated service installation 
 # Custom scripts install is copied to for standalone installation: 
@@ -217,6 +197,41 @@ WorkingDirectoryBot="${_dir}/${BinanceFolder}/binance-trade-bot"
 WorkingDirectoryTelegram="${_dir}/${BinanceFolder}/BTB-manager-telegram"
 DescriptionBot="Binance Trade Bot - ${BinanceFolder}"
 DescriptionTelegram="BTB-manager-telegram - ${BinanceFolder}"
+
+########################################################################################################################################################
+#This will create the folder where the Binance Bot will be installed in.
+#
+mkdir $BinanceFolder
+cd $BinanceFolder
+
+
+
+########################################################################################################################################################
+#This will install Git and install the BOTS
+#
+git init  
+$BinanceBot
+git clone https://github.com/lorcalhost/BTB-manager-telegram.git
+##################################################################
+# Check if TA-lib is needed. If yes then prepare data
+if grep -iFq "TA-lib" "${WorkingDirectoryBot}/requirements.txt" ;
+wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz
+tar -xzf ta-lib-0.4.0-src.tar.gz
+cd ta-lib/
+./configure --prefix=/usr
+make
+sudo make install
+pip3 install TA-Lib
+cd ..
+fi
+# End TA-Lib preperation 
+##################################################################
+# Install requirements of bots
+cd binance-trade-bot
+pip3 install -r requirements.txt
+cd ..
+cd BTB-manager-telegram
+pip3 install -r requirements.txt
 
 
 ########################################################################################################################################################
@@ -295,14 +310,21 @@ while read p; do
 	echo -n $first_value2
      echo -n " "
      echo $crypto_coin_id
-     echo -n "Last value: "
-     last_value2=$(sqlite3 -cmd '.timeout 1000' $DATABASE "select crypto_trade_amount  from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE' order by id DESC limit 1;")
-     echo -n $last_value2
+     echo -n "Last value Buy/Sell: "
+     last_valueb=$(sqlite3 -cmd '.timeout 1000' $DATABASE "select crypto_trade_amount  from trade_history where alt_coin_id='$p' and selling=0 and state='COMPLETE' order by id DESC limit 1;")
+     last_values=$(sqlite3 -cmd '.timeout 1000' $DATABASE "select crypto_trade_amount  from trade_history where alt_coin_id='$p' and selling=1 and state='COMPLETE' order by id DESC limit 1;")
+
+     echo -n $last_valueb
+     echo -n " / "
      echo -n " "
+     echo -n $last_values
      echo $crypto_coin_id
-     echo -n "Grow: "
-     grow=$(awk "BEGIN {print ($last_value2/$first_value2*100)-100}")
-     echo -n $grow
+     echo -n "Grow Buy/Sell: "
+     growb=$(awk "BEGIN {print ($last_valueb/$first_value2*100)-100}")
+     grows=$(awk "BEGIN {print ($last_values/$first_value2*100)-100}")
+     echo -n $growb
+     echo -n "% / "
+     echo -n $grows
      echo "%"
 	echo -n "Number of trades: "
 	echo $jumps
