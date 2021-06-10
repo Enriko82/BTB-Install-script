@@ -95,7 +95,7 @@ do
 		break
            ;;
         "Mila432 (Homersimpson) master")
-            	BinanceBot="https://github.com/Mila432/binance-trade-bot.git"
+            	BinanceBot="git clone https://github.com/Mila432/binance-trade-bot.git"
         	BinanceBotVersion="Mila432 (Homersimpson) master"
 		echo "Binance trading bot will be installed with ${BinanceBot}"
 		break
@@ -214,7 +214,8 @@ $BinanceBot
 git clone https://github.com/lorcalhost/BTB-manager-telegram.git
 ##################################################################
 # Check if TA-lib is needed. If yes then prepare data
-if grep -iFq "TA-lib" "${WorkingDirectoryBot}/requirements.txt" ;
+if grep -iFq "TA-lib" "${WorkingDirectoryBot}/requirements.txt" ; then
+echo "Downloading TA-lib files"
 wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz
 tar -xzf ta-lib-0.4.0-src.tar.gz
 cd ta-lib/
