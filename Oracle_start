@@ -1,0 +1,71 @@
+#!/bin/bash
+# This is an installation script for installing Binance Trade Bot on Oracle Free tier cloud, or Raspberry Pi or other Linux variants
+#
+# Copyright 2021 Enriko82
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#
+#
+# Instructions how to install:
+# Create a new instance in Oracle cloud 
+# 
+# If you like this automated install starter script. Please go to:
+# https://www.buymeacoffee.com/Enriko82
+#
+#
+## Version updates
+# 1.0 14-06-2021
+#
+# More information about the Binance Trade Bot can be found here
+# https://github.com/edeng23/binance-trade-bot
+# If you like the Binance trade Bot. Please go to here to support:
+# https://www.buymeacoffee.com/edeng 
+#
+# More information about the Binance Trade Bot Manager Telegram can be found here
+# https://github.com/lorcalhost/BTB-manager-telegram
+# If you like the Binance Trade Bot Manager Telegram. Please go to here to support:
+# https://www.buymeacoffee.com/lorcalhost
+#
+# End instructions
+########################################################################################################################################################
+
+############################## 
+# Set here in which folder you would like the Bot to be installed:
+# By default the bot will be installed in the subfolder Binance1
+BinanceFolder=Binance1
+
+##############################
+# Fill in here your API keys of Binance
+api_key=
+api_secret_key=
+##############################
+# Select here your bridge coin you would like to use
+bridge=
+##############################
+# Fill in your telegram details here
+# On Telegram, talk to @botfather and create a bot.
+# It will send you your Telegram bot token.
+TOKEN=
+
+# On Telegram, talk to @userinfobot.
+# It will send you some information among which your Telegram chat_id.
+CHAT_ID=
+
+sudo yum install git -y
+git init
+git clone https://github.com/Enriko82/BTB-Install-script.git
+sudo chmod +x /called_scripts/Oracle_Starter.sh
+. ./called_scripts/Oracle_Starter.sh
+echo all done
