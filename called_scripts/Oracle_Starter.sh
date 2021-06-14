@@ -40,7 +40,7 @@ Installversion=Enriko82_Starter_1.0_20210614
 			echo "User name is ${UserBot}"
 			sudo yum update -y 
 			sudo -H pip3 install --upgrade pip
-			sudo yum install git sqlite3 ntp python-devel python36-devel openssl-devel libffi-devel libevent-devel -y
+			sudo yum install sqlite3 ntp python-devel python36-devel openssl-devel libffi-devel libevent-devel -y
 			pip install cryptography==3.2.1
 			pip install pyOpenSSL==19.1.0
 			pip install python-dateutil==3.0.0
