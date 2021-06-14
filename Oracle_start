@@ -41,6 +41,8 @@
 # End instructions
 ########################################################################################################################################################
 
+########################################################################################################################################################
+# Start User input
 ############################## 
 # Set here in which folder you would like the Bot to be installed:
 # By default the bot will be installed in the subfolder Binance1
@@ -48,24 +50,27 @@ BinanceFolder=Binance1
 
 ##############################
 # Fill in here your API keys of Binance
-api_key=
-api_secret_key=
+api_key=HereyourAPIkey
+api_secret_key=Hereyourapisecretkey
 ##############################
-# Select here your bridge coin you would like to use
-bridge=
+# Select here your bridge coin you would like to use (USDT taken as example)
+bridge=USDT
 ##############################
 # Fill in your telegram details here
 # On Telegram, talk to @botfather and create a bot.
 # It will send you your Telegram bot token.
-TOKEN=
+TOKEN=123456:abcdefgh
 
 # On Telegram, talk to @userinfobot.
 # It will send you some information among which your Telegram chat_id.
-CHAT_ID=
+CHAT_ID=1234567
+
+# End user Input
+########################################################################################################################################################
 
 sudo yum install git -y
 git init
 git clone https://github.com/Enriko82/BTB-Install-script.git
-sudo chmod +x /called_scripts/Oracle_Starter.sh
-. ./called_scripts/Oracle_Starter.sh
+sudo chmod +x "BTB-Install-script/called_scripts/Oracle_Starter.sh"
+. ./BTB-Install-script/called_scripts/Oracle_Starter.sh
 echo all done
