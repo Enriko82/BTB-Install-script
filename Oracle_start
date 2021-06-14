@@ -68,6 +68,7 @@ CHAT_ID=1234567
 # End user Input
 ########################################################################################################################################################
 
+cd /home/opc
 sudo yum install git -y
 git init
 git clone https://github.com/Enriko82/BTB-Install-script.git
