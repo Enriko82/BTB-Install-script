@@ -35,7 +35,8 @@
 BinanceBot="git clone https://github.com/edeng23/binance-trade-bot.git"
 BinanceBotVersion="Edeng 23 Master"
 Installversion=Enriko82_Starter_1.0_20210614
-cd $home
+mkdir -p Bot
+cd Bot
 # "Oracle Linux Cloud"
       UserBot="$USER"
 			echo "User name is ${UserBot}"
