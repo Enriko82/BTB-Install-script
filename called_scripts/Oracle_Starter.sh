@@ -33,13 +33,13 @@
 # 
 #
 BinanceBot="git clone https://github.com/edeng23/binance-trade-bot.git"
+Binancefolder=$2
 BinanceBotVersion="Edeng 23 Master"
 Installversion=Enriko82_Starter_1.0_20210614
-mkdir -p Bot
-cd Bot
 # "Oracle Linux Cloud"
       UserBot=opc
 			echo "User name is ${UserBot}"
+			echo "Install directory ${Binancefolder}"
 			# sudo yum update -y 
 			sudo -H pip3 install --upgrade pip
 			sudo yum install sqlite3 ntp python-devel python36-devel openssl-devel libffi-devel libevent-devel -y
@@ -55,7 +55,8 @@ _dir="${1:-${PWD}}"
  
 ## Die if $dir does not exists
 [ ! -d "$_dir" ] && { echo "Error: Directory $_dir not found."; exit 2; }
- 
+echo "Bot will be installed in ${_dir}/${BinanceFolder}/"
+
 ########################################################################################################################################################
 # Setting variables for installation folders for automated service installation 
 # Custom scripts install is copied to for standalone installation: 
