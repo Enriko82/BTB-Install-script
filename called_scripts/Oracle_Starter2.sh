@@ -40,7 +40,7 @@ cd Bot
 # "Oracle Linux Cloud"
       UserBot=opc
 			echo "User name is ${UserBot}"
-			sudo yum update -y 
+			# sudo yum update -y 
 			sudo -H pip3 install --upgrade pip
 			sudo yum install sqlite3 ntp python-devel python36-devel openssl-devel libffi-devel libevent-devel -y
 			pip install cryptography==3.2.1
