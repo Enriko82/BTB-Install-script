@@ -36,19 +36,21 @@ BinanceBot="git clone https://github.com/edeng23/binance-trade-bot.git"
 #Binancefolder=Binance_bot
 BinanceBotVersion="Edeng 23 Master"
 Installversion=Enriko82_Starter_1.0_20210614
-# "Oracle Linux Cloud"
-      UserBot=opc
+#"Oracle Linux Cloud (VM.Standard.A1.Flex)")
+			UserBot="opc"
 			echo "User name is ${UserBot}"
+			################################
+			#Default Kernel updates and mandatory software installation
+			#
 			echo "Install directory ${BinanceFolder}"
 			cd
 			echo "Current location is $pwd"
 			sudo yum update -y 
 			sudo -H pip3 install --upgrade pip
-			sudo yum install sqlite3 ntp python-devel python36-devel openssl-devel libffi-devel libevent-devel -y
-			pip install cryptography==3.2.1
-			pip install pyOpenSSL==19.1.0
-			pip install python-dateutil==3.0.0
-			pip install configparser==4.0.2
+			pip3 install oci-cli --upgrade
+			pip3 install python-dateutil
+			sudo yum install sqlite ntp python-devel python36-devel openssl-devel libffi-devel libevent-devel -y
+			pip3 install wheel
 	
 ########################################################################################################################################################
 ## If $1 is not passed, set to the current working dir using $PWD
