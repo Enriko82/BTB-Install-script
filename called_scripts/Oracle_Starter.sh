@@ -33,13 +33,13 @@
 # 
 #
 BinanceBot="git clone https://github.com/edeng23/binance-trade-bot.git"
-Binancefolder=Binance_bot
+#Binancefolder=Binance_bot
 BinanceBotVersion="Edeng 23 Master"
 Installversion=Enriko82_Starter_1.0_20210614
 # "Oracle Linux Cloud"
       UserBot=opc
 			echo "User name is ${UserBot}"
-			echo "Install directory ${Binancefolder}"
+			echo "Install directory ${BinanceFolder}"
 			cd
 			echo "Current location is $pwd"
 			# sudo yum update -y 
