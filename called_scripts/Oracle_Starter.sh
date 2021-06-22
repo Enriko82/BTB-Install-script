@@ -42,7 +42,7 @@ Installversion=Enriko82_Starter_1.0_20210614
 			echo "Install directory ${BinanceFolder}"
 			cd
 			echo "Current location is $pwd"
-			# sudo yum update -y 
+			sudo yum update -y 
 			sudo -H pip3 install --upgrade pip
 			sudo yum install sqlite3 ntp python-devel python36-devel openssl-devel libffi-devel libevent-devel -y
 			pip install cryptography==3.2.1
