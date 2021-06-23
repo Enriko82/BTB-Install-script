@@ -29,6 +29,10 @@ BinanceFolder=Binance1
 # 2) Fill in below your supported coins, which you would like to trade
 # 3) Fill in below your Telegram Bot ID's
 # Run the following commands in the SSH client
+# For ubuntu shape the following must be done first:
+# 				sudo apt-get update
+# 				sudo apt-get install vim
+# After that if VI is installed:
 # 		vi start.sh
 # Press insert or i to go into edit mode
 # Copy everything from this file into the VI screen. (Right mouse click and paste)
@@ -54,7 +58,9 @@ BinanceFolder=Binance1
 # 1.5 06-06-2021 Added current install directory, Retrieve Username, added sqlite3 support
 # 1.6 09-06-2021 Added installation on Oracle Linux Cloud (VM.Standard.A1.Flex) up to 4 CPU and 24 GB of RAM
 # 1.7 10-06-2021 Added TA-Lib preparation, added Mila432 (Homersimpson) version
+# 1.8 23-06-2021 Added Oracle Ubuntu 20.04 (python 3.8.5) which can include TA-Lib and Mathlab for Crypto charts
 #
+Installversion=Enriko82_Full_1.8_20210623
 # More information about the Binance Trade Bot can be found here
 # https://github.com/edeng23/binance-trade-bot
 # If you like the Binance trade Bot. Please go to here to support:
@@ -117,7 +123,7 @@ done
 # Install type choice
 
 PS4='Please enter your choice: '
-options1=("Oracle Linux Cloud" "Oracle Linux Cloud (VM.Standard.A1.Flex)" "Raspberry Pi" "Manual (Other)" "Quit")
+options1=("Oracle Linux Cloud" "Oracle Linux Cloud (VM.Standard.A1.Flex)" "Oracle Ubuntu 20.04 Minimal" "Raspberry Pi" "Manual (Other)" "Quit")
 select opt in "${options1[@]}"
 do
     case $opt in
@@ -152,6 +158,16 @@ do
 			pip3 install wheel
 			break
 			;;
+	"Oracle Ubuntu 20.04 Minimal")
+			#Setting current username for services
+			UserBot="$USER"
+			echo "User name is ${UserBot}"
+			PATH=$PATH:/home/${UserBot}/.local/bin;export $PATH
+			sudo apt update -y
+			sudo apt-get update -y
+			sudo apt install ntp git python3 idle3 python3-pip sqlite3
+			pip install websockets==8.1
+			break
 	"Raspberry Pi")
             		UserBot="$USER"
 			echo "User name is ${UserBot}"
@@ -199,6 +215,7 @@ _dir="${1:-${PWD}}"
 
 WorkingDirectoryBot="${_dir}/${BinanceFolder}/binance-trade-bot"
 WorkingDirectoryTelegram="${_dir}/${BinanceFolder}/BTB-manager-telegram"
+WorkingDirectoryBTBChart="${_dir}/${BinanceFolder}/binance-chart-plugin-telegram-bot"
 DescriptionBot="Binance Trade Bot - ${BinanceFolder}"
 DescriptionTelegram="BTB-manager-telegram - ${BinanceFolder}"
 
@@ -216,6 +233,7 @@ cd $BinanceFolder
 git init  
 $BinanceBot
 git clone https://github.com/lorcalhost/BTB-manager-telegram.git
+git clone https://github.com/marcozetaa/binance-chart-plugin-telegram-bot.git
 ##################################################################
 # Check if TA-lib is needed. If yes then prepare data
 if grep -iFq "TA-lib" "${WorkingDirectoryBot}/requirements.txt" ; then
@@ -237,7 +255,15 @@ pip3 install -r requirements.txt
 cd ..
 cd BTB-manager-telegram
 pip3 install -r requirements.txt
-
+cd ..
+# Create config file for Binance chart plugin
+cat <<EOF >${WorkingDirectoryBTBChart}/config
+[config]
+bot_path=${WorkingDirectoryBot}
+min_timestamp = 0
+EOF
+cd binance-chart-plugin-telegram-bot
+pip3 install -r requirements.txt
 
 ########################################################################################################################################################
 # Start Custom script section
@@ -253,7 +279,9 @@ cat <<EOF >${WorkingDirectoryTelegram}/config/custom_scripts.json
 {
   "💰 Current coin progress": "custom_scripts/current_coin_progress.sh",
   "💰 All coins progress": "custom_scripts/all_coins_progress.sh",
-  "🦸 Appreciate Masa": "echo Masa is great"
+  "🦸 Appreciate Masa": "echo Masa is great",
+  "Crypto chart": "python3 ../binance-chart-plugin-telegram-bot/db_chart.py",
+  "Update crypto chart": "bash -c 'cd ../binance-chart-plugin-telegram-bot && git pull'"
 }
 EOF
 
@@ -426,15 +454,18 @@ buy_timeout=10
 sell_timeout=10
 buy_order_type=limit
 sell_order_type=market
-#BinanceBotVersion=${BinanceBotVersion}
-#BinanceBotInstallFolder=${BinanceFolder}
 #AdditionalParameters=Below_is_only_for_TnTwist_Master
 sell_max_price_change=0.005
 buy_max_price_change=0.005
 trade_fee=auto
 price_type=orderbook
-max_idle_hours=6
-#InstallScript=Enriko82_V1.6_20210609
+accept_losses=false
+max_idle_hours=72
+ratio_adjust_weight=500
+#BinanceBotVersion=${BinanceBotVersion}
+#BinanceBotInstallFolder=${BinanceFolder}
+#InstallScript=${Installversion}
+#InstallScript=Enriko82_V1.8_20210623
 EOF
 
 ##################################################################
