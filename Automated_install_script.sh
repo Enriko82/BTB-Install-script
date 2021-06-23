@@ -161,6 +161,8 @@ do
 	"Oracle Ubuntu 20.04 Minimal")
 			#Setting current username for services
 			UserBot="$USER"
+			# below variable will install Cryptochart
+			PyVer3.8+="Yes"
 			echo "User name is ${UserBot}"
 			PATH=$PATH:/home/${UserBot}/.local/bin;export $PATH
 			sudo apt update -y
@@ -170,6 +172,8 @@ do
 			break
 	"Raspberry Pi")
             		UserBot="$USER"
+			# below variable will install Cryptochart if set to Yes and Python version is 3.8 or higher
+			PyVer3.8+="No"
 			echo "User name is ${UserBot}"
 			PATH=$PATH:/home/${UserBot}/.local/bin;export $PATH
 			sudo apt update
@@ -233,9 +237,10 @@ cd $BinanceFolder
 git init  
 $BinanceBot
 git clone https://github.com/lorcalhost/BTB-manager-telegram.git
-git clone https://github.com/marcozetaa/binance-chart-plugin-telegram-bot.git
+
+
 ##################################################################
-# Check if TA-lib is needed. If yes then prepare data
+# Check if TA-lib is needed. If yes then prepare data. Works only with Python 3.7+
 if grep -iFq "TA-lib" "${WorkingDirectoryBot}/requirements.txt" ; then
 echo "Downloading TA-lib files"
 wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz
@@ -256,14 +261,7 @@ cd ..
 cd BTB-manager-telegram
 pip3 install -r requirements.txt
 cd ..
-# Create config file for Binance chart plugin
-cat <<EOF >${WorkingDirectoryBTBChart}/config
-[config]
-bot_path=${WorkingDirectoryBot}
-min_timestamp = 0
-EOF
-cd binance-chart-plugin-telegram-bot
-pip3 install -r requirements.txt
+
 
 ########################################################################################################################################################
 # Start Custom script section
@@ -272,6 +270,18 @@ pip3 install -r requirements.txt
 #
 mkdir -p ${WorkingDirectoryTelegram}/custom_scripts
 
+
+if test "$PyVer3.8+" = "Yes"
+then
+git clone https://github.com/marcozetaa/binance-chart-plugin-telegram-bot.git
+# Create config file for Binance chart plugin
+cat <<EOF >${WorkingDirectoryBTBChart}/config
+[config]
+bot_path=${WorkingDirectoryBot}
+min_timestamp = 0
+EOF
+cd binance-chart-plugin-telegram-bot
+pip3 install -r requirements.txt
 ##################################################################
 # Create Custom Script file, which will be called in telegram bot
 #
@@ -284,7 +294,18 @@ cat <<EOF >${WorkingDirectoryTelegram}/config/custom_scripts.json
   "Update crypto chart": "bash -c 'cd ../binance-chart-plugin-telegram-bot && git pull'"
 }
 EOF
-
+else
+##################################################################
+# Create Custom Script file, which will be called in telegram bot for non Ubuntu setups
+#
+cat <<EOF >${WorkingDirectoryTelegram}/config/custom_scripts.json
+{
+  "💰 Current coin progress": "custom_scripts/current_coin_progress.sh",
+  "💰 All coins progress": "custom_scripts/all_coins_progress.sh",
+  "🦸 Appreciate Masa": "echo Masa is great"
+}
+EOF
+fi
 
 ##################################################################
 # Create Current_coin_progress.sh file
