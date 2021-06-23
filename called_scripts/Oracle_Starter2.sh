@@ -33,7 +33,6 @@
 # 
 #
 BinanceBot="git clone https://github.com/edeng23/binance-trade-bot.git"
-#Binancefolder=Binance_bot
 BinanceBotVersion="Edeng 23 Master"
 Installversion=Enriko82_Starter_1.0_20210614
 #"Oracle Linux Cloud (VM.Standard.A1.Flex)")
@@ -45,6 +44,7 @@ Installversion=Enriko82_Starter_1.0_20210614
 			echo "Install directory ${BinanceFolder}"
 			cd
 			echo "Current location is $pwd"
+			PATH=$PATH:/home/${UserBot}/.local/bin;export $PATH
 			sudo yum update -y 
 			sudo -H pip3 install --upgrade pip
 			pip3 install oci-cli --upgrade
