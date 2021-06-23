@@ -24,7 +24,8 @@
 #
 #
 ## Version updates
-# 1.0 14-06-2021
+# 0.9 14-06-2021
+# 1.0 23-06-2021 
 #
 # End instructions
 ########################################################################################################################################################
@@ -34,7 +35,7 @@
 #
 BinanceBot="git clone https://github.com/edeng23/binance-trade-bot.git"
 BinanceBotVersion="Edeng 23 Master"
-Installversion=Enriko82_Starter_1.0_20210614
+Installversion=Enriko82_Starter_1.0_20210623
 #"Oracle Linux Cloud (VM.Standard.A1.Flex)")
 			UserBot="opc"
 			echo "User name is ${UserBot}"
@@ -297,6 +298,7 @@ sell_order_type=market
 #BinanceBotVersion=${BinanceBotVersion}
 #BinanceBotInstallFolder=${BinanceFolder}
 #InstallScript=${Installversion}
+#InstallDate=$(date +'%Y/%m/%d')
 EOF
 
 ##################################################################
