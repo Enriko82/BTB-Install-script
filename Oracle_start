@@ -68,10 +68,18 @@ CHAT_ID=1234567
 # End user Input
 ########################################################################################################################################################
 
+
+export BinanceFolder
+export api_key
+export api_secret_key
+export bridge
+export TOKEN
+export CHAT_ID
 cd /home/opc
 sudo yum install git -y
 git init
 git clone https://github.com/Enriko82/BTB-Install-script.git
 sudo chmod +x "BTB-Install-script/called_scripts/Oracle_Starter.sh"
-. ./BTB-Install-script/called_scripts/Oracle_Starter.sh
-echo all done
+runuser --session-command -u opc ". ./BTB-Install-script/called_scripts/Oracle_Starter.sh"
+echo "all done"
+
