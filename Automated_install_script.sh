@@ -486,7 +486,6 @@ ratio_adjust_weight=500
 #BinanceBotVersion=${BinanceBotVersion}
 #BinanceBotInstallFolder=${BinanceFolder}
 #InstallScript=${Installversion}
-#InstallScript=Enriko82_V1.8_20210623
 EOF
 
 ##################################################################
