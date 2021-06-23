@@ -54,6 +54,9 @@ BinanceFolder=Binance1
 api_key=HereyourAPIkey
 api_secret_key=Hereyourapisecretkey
 ##############################
+# Update here if you are US (tld=us) or non us (tld=com)
+tld=com
+##############################
 # Select here your bridge coin you would like to use (USDT taken as example)
 bridge=USDT
 ##############################
@@ -73,6 +76,7 @@ CHAT_ID=1234567
 export BinanceFolder
 export api_key
 export api_secret_key
+export tld
 export bridge
 export TOKEN
 export CHAT_ID
