@@ -46,11 +46,11 @@ Installversion=Enriko82_Starter_1.0_20210614
 			echo "Current location is $PWD"
 			PATH=$PATH:/home/${UserBot}/.local/bin;export $PATH
 			sudo yum update -y 
-			sudo -H pip3 install --upgrade pip
-			pip3 install oci-cli --upgrade
-			pip3 install python-dateutil
-			sudo yum install sqlite ntp python-devel python36-devel openssl-devel libffi-devel libevent-devel -y
-			pip3 install wheel
+			sudo -H pip3.9 install --upgrade pip
+			pip3.9 install oci-cli --upgrade
+			pip3.9 install python-dateutil
+			sudo yum install sqlite ntp python-devel python36-devel python39-devel openssl-devel libffi-devel libevent-devel -y
+			pip3.9 install wheel
 	
 ########################################################################################################################################################
 ## If $1 is not passed, set to the current working dir using $PWD
@@ -92,10 +92,10 @@ git clone https://github.com/marcozetaa/binance-chart-plugin-telegram-bot.git
 ##################################################################
 # Install requirements of bots
 cd binance-trade-bot
-pip3 install -r requirements.txt
+pip3.9 install -r requirements.txt
 cd ..
 cd BTB-manager-telegram
-pip3 install -r requirements.txt
+pip3.9 install -r requirements.txt
 cd ..
 # Create config file for Binance chart plugin
 cat <<EOF >${WorkingDirectoryBTBChart}/config
@@ -104,7 +104,7 @@ bot_path=${WorkingDirectoryBTBChart}
 min_timestamp = 0
 EOF
 cd binance-chart-plugin-telegram-bot
-pip3 install -r requirements.txt
+pip3.9 install -r requirements.txt
 
 ########################################################################################################################################################
 # Start Custom script section
@@ -121,7 +121,7 @@ cat <<EOF >${WorkingDirectoryTelegram}/config/custom_scripts.json
   "💰 Current coin progress": "custom_scripts/current_coin_progress.sh",
   "💰 All coins progress": "custom_scripts/all_coins_progress.sh",
   "🦸 Appreciate Masa": "echo Masa is great",
-  "Crypto chart": "python3 ../binance-chart-plugin-telegram-bot/db_chart.py",
+  "Crypto chart": "python3.9 ../binance-chart-plugin-telegram-bot/db_chart.py",
   "Update crypto chart": "bash -c 'cd ../binance-chart-plugin-telegram-bot && git pull'"
 }
 EOF
@@ -227,7 +227,7 @@ Description=${DescriptionBot}
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/python3 -u -m binance_trade_bot
+ExecStart=/usr/bin/python3.9 -u -m binance_trade_bot
 WorkingDirectory=${WorkingDirectoryBot}
 StandardOutput=inherit
 StandardError=inherit
@@ -252,7 +252,7 @@ Description=${DescriptionTelegram}
 After=network.target BTB${BinanceFolder}.service
 
 [Service]
-ExecStart=/usr/bin/python3 -u -m btb_manager_telegram -p "../binance-trade-bot"
+ExecStart=/usr/bin/python3.9 -u -m btb_manager_telegram -p "../binance-trade-bot"
 WorkingDirectory=${WorkingDirectoryTelegram}
 StandardOutput=inherit
 StandardError=inherit
