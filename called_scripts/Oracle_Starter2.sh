@@ -88,7 +88,8 @@ cd $BinanceFolder
 git init  
 $BinanceBot
 git clone https://github.com/lorcalhost/BTB-manager-telegram.git
-git clone https://github.com/marcozetaa/binance-chart-plugin-telegram-bot.git
+# Binance chart plugin needs Python 3.7+ not working with Oracle yet
+#git clone https://github.com/marcozetaa/binance-chart-plugin-telegram-bot.git
 ##################################################################
 # Install requirements of bots
 cd binance-trade-bot
@@ -98,13 +99,13 @@ cd BTB-manager-telegram
 pip3 install -r requirements.txt
 cd ..
 # Create config file for Binance chart plugin
-cat <<EOF >${WorkingDirectoryBTBChart}/config
-[config]
-bot_path=${WorkingDirectoryBTBChart}
-min_timestamp = 0
-EOF
-cd binance-chart-plugin-telegram-bot
-pip3 install -r requirements.txt
+#cat <<EOF >${WorkingDirectoryBTBChart}/config
+#[config]
+#bot_path=${WorkingDirectoryBTBChart}
+#min_timestamp = 0
+#EOF
+#cd binance-chart-plugin-telegram-bot
+#pip3 install -r requirements.txt
 
 ########################################################################################################################################################
 # Start Custom script section
@@ -120,9 +121,7 @@ cat <<EOF >${WorkingDirectoryTelegram}/config/custom_scripts.json
 {
   "💰 Current coin progress": "custom_scripts/current_coin_progress.sh",
   "💰 All coins progress": "custom_scripts/all_coins_progress.sh",
-  "🦸 Appreciate Masa": "echo Masa is great",
-  "Crypto chart": "python3.9 ../binance-chart-plugin-telegram-bot/db_chart.py",
-  "Update crypto chart": "bash -c 'cd ../binance-chart-plugin-telegram-bot && git pull'"
+  "🦸 Appreciate Masa": "echo Masa is great"
 }
 EOF
 
