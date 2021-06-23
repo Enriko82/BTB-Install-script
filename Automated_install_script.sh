@@ -127,6 +127,7 @@ do
 			################################
 			#Default Kernel updates and mandatory software installation
 			#
+			PATH=$PATH:/home/${UserBot}/.local/bin;export $PATH
 			sudo yum update -y 
 			sudo -H pip3 install --upgrade pip
 			sudo yum install git sqlite3 ntp python-devel python36-devel openssl-devel libffi-devel libevent-devel -y
@@ -142,6 +143,7 @@ do
 			################################
 			#Default Kernel updates and mandatory software installation
 			#
+			PATH=$PATH:/home/${UserBot}/.local/bin;export $PATH
 			sudo yum update -y 
 			sudo pip3 install --upgrade pip
 			pip3 install oci-cli --upgrade
@@ -153,6 +155,7 @@ do
 	"Raspberry Pi")
             		UserBot="$USER"
 			echo "User name is ${UserBot}"
+			PATH=$PATH:/home/${UserBot}/.local/bin;export $PATH
 			sudo apt update
 			sudo apt-get update
 			sudo apt install ntp -y
@@ -165,6 +168,7 @@ do
 			echo "User name is ${UserBot}"
 			echo Following updates are not tested!
 			sleep 10s 
+			PATH=$PATH:/home/${UserBot}/.local/bin;export $PATH
 			sudo apt update
 			sudo apt-get update
 			sudo apt install ntp -y
