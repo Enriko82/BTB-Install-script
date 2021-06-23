@@ -170,6 +170,7 @@ do
 			sudo apt install ntp git python3 idle3 python3-pip sqlite3
 			pip install websockets==8.1
 			break
+			;;
 	"Raspberry Pi")
             		UserBot="$USER"
 			# below variable will install Cryptochart if set to Yes and Python version is 3.8 or higher
