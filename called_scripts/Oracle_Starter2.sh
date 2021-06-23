@@ -43,7 +43,7 @@ Installversion=Enriko82_Starter_1.0_20210614
 			#
 			echo "Install directory ${BinanceFolder}"
 			cd
-			echo "Current location is $pwd"
+			echo "Current location is $PWD"
 			PATH=$PATH:/home/${UserBot}/.local/bin;export $PATH
 			sudo yum update -y 
 			sudo -H pip3 install --upgrade pip
