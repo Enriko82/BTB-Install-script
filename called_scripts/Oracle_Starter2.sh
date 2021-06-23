@@ -70,6 +70,7 @@ echo "Bot will be installed in ${_dir}/${BinanceFolder}/"
 
 WorkingDirectoryBot="${_dir}/${BinanceFolder}/binance-trade-bot"
 WorkingDirectoryTelegram="${_dir}/${BinanceFolder}/BTB-manager-telegram"
+WorkingDirectoryBTBChart="${_dir}/${BinanceFolder}/binance-chart-plugin-telegram-bot"
 DescriptionBot="Binance Trade Bot - ${BinanceFolder}"
 DescriptionTelegram="BTB-manager-telegram - ${BinanceFolder}"
 
@@ -87,6 +88,7 @@ cd $BinanceFolder
 git init  
 $BinanceBot
 git clone https://github.com/lorcalhost/BTB-manager-telegram.git
+git clone https://github.com/marcozetaa/binance-chart-plugin-telegram-bot.git
 ##################################################################
 # Install requirements of bots
 cd binance-trade-bot
@@ -94,7 +96,15 @@ pip3 install -r requirements.txt
 cd ..
 cd BTB-manager-telegram
 pip3 install -r requirements.txt
-
+cd ..
+# Create config file for Binance chart plugin
+cat <<EOF >${WorkingDirectoryBTBChart}/config
+[config]
+bot_path=${WorkingDirectoryBTBChart}
+min_timestamp = 0
+EOF
+cd binance-chart-plugin-telegram-bot
+pip3 install -r requirements.txt
 
 ########################################################################################################################################################
 # Start Custom script section
@@ -110,7 +120,9 @@ cat <<EOF >${WorkingDirectoryTelegram}/config/custom_scripts.json
 {
   "💰 Current coin progress": "custom_scripts/current_coin_progress.sh",
   "💰 All coins progress": "custom_scripts/all_coins_progress.sh",
-  "🦸 Appreciate Masa": "echo Masa is great"
+  "🦸 Appreciate Masa": "echo Masa is great",
+  "Crypto chart": "python3 ../binance-chart-plugin-telegram-bot/db_chart.py",
+  "Update crypto chart": "bash -c 'cd ../binance-chart-plugin-telegram-bot && git pull'"
 }
 EOF
 
