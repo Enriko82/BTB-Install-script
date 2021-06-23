@@ -167,7 +167,7 @@ do
 			PATH=$PATH:/home/${UserBot}/.local/bin;export $PATH
 			sudo apt update -y
 			sudo apt-get update -y
-			sudo apt install ntp git python3 idle3 python3-pip sqlite3
+			sudo apt install ntp git python3 idle3 python3-pip sqlite3 -y
 			pip install websockets==8.1
 			break
 			;;
@@ -180,7 +180,7 @@ do
 			sudo apt update
 			sudo apt-get update
 			sudo apt install ntp -y
-			sudo apt install git python3 idle3 python3-pip sqlite3
+			sudo apt install git python3 idle3 python3-pip sqlite3 -y
 			break
            ;;
         "Manual (Other)")
