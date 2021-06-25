@@ -162,7 +162,7 @@ do
 			#Setting current username for services
 			UserBot="$USER"
 			# below variable will install Cryptochart
-			PyVer3.8+="Yes"
+			PyVer38="Yes"
 			echo "User name is ${UserBot}"
 			PATH=$PATH:/home/${UserBot}/.local/bin;export $PATH
 			sudo apt update -y
@@ -174,7 +174,7 @@ do
 	"Raspberry Pi")
             		UserBot="$USER"
 			# below variable will install Cryptochart if set to Yes and Python version is 3.8 or higher
-			PyVer3.8+="No"
+			PyVer38="No"
 			echo "User name is ${UserBot}"
 			PATH=$PATH:/home/${UserBot}/.local/bin;export $PATH
 			sudo apt update
@@ -272,7 +272,7 @@ cd ..
 mkdir -p ${WorkingDirectoryTelegram}/custom_scripts
 
 
-if test "$PyVer3.8+" = "Yes"
+if test ${PyVer38} = "Yes"
 then
 git clone https://github.com/marcozetaa/binance-chart-plugin-telegram-bot.git
 # Create config file for Binance chart plugin
