@@ -59,8 +59,9 @@ BinanceFolder=Binance1
 # 1.6 09-06-2021 Added installation on Oracle Linux Cloud (VM.Standard.A1.Flex) up to 4 CPU and 24 GB of RAM
 # 1.7 10-06-2021 Added TA-Lib preparation, added Mila432 (Homersimpson) version
 # 1.8 23-06-2021 Added Oracle Ubuntu 20.04 (python 3.8.5) which can include TA-Lib and Mathlab for Crypto charts
+# 1.9 27-06-2021 Bugfixes of variable. Added warmup in custom script.
 #
-Installversion=Enriko82_Full_1.8_20210623
+Installversion=Enriko82_Full_1.9_20210627
 # More information about the Binance Trade Bot can be found here
 # https://github.com/edeng23/binance-trade-bot
 # If you like the Binance trade Bot. Please go to here to support:
@@ -292,7 +293,8 @@ cat <<EOF >${WorkingDirectoryTelegram}/config/custom_scripts.json
   "💰 All coins progress": "custom_scripts/all_coins_progress.sh",
   "🦸 Appreciate Masa": "echo Masa is great",
   "Crypto chart": "python3 ../binance-chart-plugin-telegram-bot/db_chart.py",
-  "Update crypto chart": "bash -c 'cd ../binance-chart-plugin-telegram-bot && git pull'"
+  "Update crypto chart": "bash -c 'cd ../binance-chart-plugin-telegram-bot && git pull'",
+  "Database warmup": "python3 ../binance-trade-bot/database_warmup.py"
 }
 EOF
 else
@@ -303,7 +305,8 @@ cat <<EOF >${WorkingDirectoryTelegram}/config/custom_scripts.json
 {
   "💰 Current coin progress": "custom_scripts/current_coin_progress.sh",
   "💰 All coins progress": "custom_scripts/all_coins_progress.sh",
-  "🦸 Appreciate Masa": "echo Masa is great"
+  "🦸 Appreciate Masa": "echo Masa is great",
+  "Database warmup": "python3 ../binance-trade-bot/database_warmup.py"
 }
 EOF
 fi
