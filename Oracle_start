@@ -88,7 +88,7 @@ export CHAT_ID
 cd /home/opc
 sudo yum install git -y
 git init
-git clone https://github.com/Enriko82/BTB-Install-script.git
+git clone https://github.com/bodasooqa/BTB-Install-script.git
 sudo chmod +x "BTB-Install-script/called_scripts/Oracle_Starter.sh"
 runuser --session-command -u opc ". ./BTB-Install-script/called_scripts/Oracle_Starter.sh"
 echo "all done"
