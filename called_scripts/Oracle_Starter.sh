@@ -33,8 +33,8 @@
 ########################################################################################################################################################
 # 
 #
-BinanceBot="git clone https://github.com/edeng23/binance-trade-bot.git"
-BinanceBotVersion="Edeng 23 Master"
+BinanceBot="git clone https://github.com/idkravitz/binance-trade-bot.git"
+BinanceBotVersion="Idkravitz master"
 Installversion=Enriko82_Starter_1.0_20210623
 #"Oracle Linux Cloud (VM.Standard.A1.Flex)")
 			UserBot="opc"
