@@ -33,8 +33,23 @@
 ########################################################################################################################################################
 # 
 #
-BinanceBot="git clone https://github.com/idkravitz/binance-trade-bot.git"
-BinanceBotVersion="Idkravitz master"
+if [ "$BinanceBotChoice" = "Edeng32 Master" ]; then
+    BinanceBot="git clone https://github.com/edeng23/binance-trade-bot.git";
+    BinanceBotVersion="Edeng32 Master";
+    
+elif [ "$BinanceBotChoice" = "Idkravitz master" ]; then
+    BinanceBot="git clone https://github.com/idkravitz/binance-trade-bot.git";
+    BinanceBotVersion="Idkravitz master";
+    
+elif [ "$BinanceBotChoice" = "TnTwist master" ]; then
+    BinanceBot="git clone https://github.com/tntwist/binance-trade-bot.git";
+    BinanceBotVersion="TnTwist master";
+    
+elif [ "$BinanceBotChoice" = "Mila432 (Homersimpson) master" ]; then
+    BinanceBot="git clone https://github.com/Mila432/binance-trade-bot.git";
+    BinanceBotVersion="Mila432 (Homersimpson) master";
+fi
+
 Installversion=Enriko82_Starter_1.0_20210623
 #"Oracle Linux Cloud (VM.Standard.A1.Flex)")
 			UserBot="opc"
