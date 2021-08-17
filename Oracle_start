@@ -49,6 +49,10 @@
 # By default the bot will be installed in the subfolder Binance1
 BinanceFolder=Binance1
 
+# Set here the name of the bot you have selected:
+# "Edeng32 Master", "Idkravitz master", "TnTwist master", "Mila432 (Homersimpson) master"
+BinanceBotChoice="Edeng32 Master"
+
 ##############################
 # Fill in here your API keys of Binance
 api_key=HereyourAPIkey
@@ -74,6 +78,7 @@ CHAT_ID=1234567
 
 
 export BinanceFolder
+export BinanceBotChoice
 export api_key
 export api_secret_key
 export tld
