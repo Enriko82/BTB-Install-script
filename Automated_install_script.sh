@@ -422,6 +422,7 @@ User=${UserBot}
 WantedBy=multi-user.target
 EOF
 sudo mv BTB${BinanceFolder}.service /etc/systemd/system/BTB${BinanceFolder}.service
+restorecon /etc/systemd/system/BTB${BinanceFolder}.service
 sudo systemctl start BTB${BinanceFolder}.service
 sudo systemctl enable BTB${BinanceFolder}.service
 
@@ -447,6 +448,7 @@ User=${UserBot}
 WantedBy=multi-user.target
 EOF
 sudo mv BTBTelegram${BinanceFolder}.service /etc/systemd/system/BTBTelegram${BinanceFolder}.service
+restorecon /etc/systemd/system/BTBTelegram${BinanceFolder}.service
 sudo systemctl start BTBTelegram${BinanceFolder}.service
 sudo systemctl enable BTBTelegram${BinanceFolder}.service
 
