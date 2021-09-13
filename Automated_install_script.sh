@@ -125,7 +125,7 @@ done
 # Install type choice
 
 PS4='Please enter your choice: '
-options1=("Oracle Linux Cloud" "Oracle Linux Cloud (VM.Standard.A1.Flex)" "Oracle Ubuntu 20.04 Minimal" "Raspberry Pi" "Manual (Other)" "Quit")
+options1=("Oracle Linux Cloud" "Oracle Linux Cloud (VM.Standard.A1.Flex)" "Oracle Ubuntu" "Raspberry Pi" "Manual (Other)" "Quit")
 select opt in "${options1[@]}"
 do
     case $opt in
@@ -160,7 +160,7 @@ do
 			pip3 install wheel
 			break
 			;;
-	"Oracle Ubuntu 20.04 Minimal")
+	"Oracle Ubuntu")
 			#Setting current username for services
 			UserBot="$USER"
 			# below variable will install Cryptochart
