@@ -60,8 +60,9 @@ BinanceFolder=Binance1
 # 1.7 10-06-2021 Added TA-Lib preparation, added Mila432 (Homersimpson) version
 # 1.8 23-06-2021 Added Oracle Ubuntu 20.04 (python 3.8.5) which can include TA-Lib and Mathlab for Crypto charts
 # 1.9 27-06-2021 Bugfixes of variable. Added warmup in custom script.
+# 1.10 13-09-2021 Commented out TAlib install. Merged fix for database warmup and restorecon of services
 #
-Installversion=Enriko82_Full_1.9_20210627
+Installversion=Enriko82_Full_1.10_13-09-2021 
 # More information about the Binance Trade Bot can be found here
 # https://github.com/edeng23/binance-trade-bot
 # If you like the Binance trade Bot. Please go to here to support:
@@ -243,17 +244,18 @@ git clone https://github.com/lorcalhost/BTB-manager-telegram.git
 
 ##################################################################
 # Check if TA-lib is needed. If yes then prepare data. Works only with Python 3.7+
-if grep -iFq "TA-lib" "${WorkingDirectoryBot}/requirements.txt" ; then
-echo "Downloading TA-lib files"
-wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz
-tar -xzf ta-lib-0.4.0-src.tar.gz
-cd ta-lib/
-./configure --prefix=/usr
-make
-sudo make install
-pip3 install TA-Lib
-cd ..
-fi
+# Removed temporary as it is not installing correctly
+# if grep -iFq "TA-lib" "${WorkingDirectoryBot}/requirements.txt" ; then
+# echo "Downloading TA-lib files"
+# wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz
+# tar -xzf ta-lib-0.4.0-src.tar.gz
+# cd ta-lib/
+# ./configure --prefix=/usr
+# make
+# sudo make install
+# pip3 install TA-Lib
+# cd ..
+# fi
 # End TA-Lib preperation 
 ##################################################################
 # Install requirements of bots
