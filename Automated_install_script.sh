@@ -264,7 +264,8 @@ if test ${PyVer38} = "Yes"
 then
 git clone https://github.com/marcozetaa/binance-chart-plugin-telegram-bot.git
 # Create config file for Binance chart plugin
-cat <<EOF >${WorkingDirectoryBTBChart}/config[config]
+cat <<EOF >${WorkingDirectoryBTBChart}/config
+[config]
 bot_path = /../binance-trade-bot
 # Date format: YYYY-MM-DD
 min_datetime = 2021-01-01
