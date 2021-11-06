@@ -401,6 +401,7 @@ Description=${DescriptionBot}
 After=network.target
 
 [Service]
+ExecStartPre=/bin/sleep 60s
 ExecStart=/usr/bin/python3 -u -m binance_trade_bot
 WorkingDirectory=${WorkingDirectoryBot}
 StandardOutput=inherit
@@ -426,6 +427,7 @@ Description=${DescriptionTelegram}
 After=network.target BTB${BinanceFolder}.service
 
 [Service]
+ExecStartPre=/bin/sleep 60s
 ExecStart=/usr/bin/python3 -u -m btb_manager_telegram -p "../binance-trade-bot"
 WorkingDirectory=${WorkingDirectoryTelegram}
 StandardOutput=inherit
