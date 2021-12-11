@@ -67,7 +67,7 @@ TGLang=en
 # 1.10 13-09-2021 Commented out TAlib install. Merged fix for database warmup and restorecon of services
 # 1.11 22-11-2021 Added multi language support for Telegram and auto startup. Updated user.cfg default variables.
 # 1.12 11-12-2021 Added MasaiasuOse to the selectable forks
-
+#
 Installversion=Enriko82_Full_1.12_11-12-2021 
 # More information about the Binance Trade Bot can be found here
 # https://github.com/edeng23/binance-trade-bot
