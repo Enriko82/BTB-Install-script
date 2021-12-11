@@ -66,8 +66,9 @@ TGLang=en
 # 1.9 27-06-2021 Bugfixes of variable. Added warmup in custom script.
 # 1.10 13-09-2021 Commented out TAlib install. Merged fix for database warmup and restorecon of services
 # 1.11 22-11-2021 Added multi language support for Telegram and auto startup. Updated user.cfg default variables.
+# 1.12 11-12-2021 Added MasaiasuOse to the selectable forks
 #
-Installversion=Enriko82_Full_1.11_22-11-2021 
+Installversion=Enriko82_Full_1.12_11-12-2021 
 # More information about the Binance Trade Bot can be found here
 # https://github.com/edeng23/binance-trade-bot
 # If you like the Binance trade Bot. Please go to here to support:
@@ -85,7 +86,7 @@ Installversion=Enriko82_Full_1.11_22-11-2021
 # 
 #
 PS3='Please enter your choice: '
-options=("Edeng32 Master" "Idkravitz master" "TnTwist master" "Mila432 (Homersimpson) master" "Specific Branch" "Quit")
+options=("Edeng32 Master" "Idkravitz master" "TnTwist master" "Mila432 (Homersimpson) master" "MasaiasuOse master" "Specific Branch" "Quit")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -113,6 +114,12 @@ do
 		echo "Binance trading bot will be installed with ${BinanceBot}"
 		break
            ;;	   
+		"MasaiasuOse master")
+            	BinanceBot="git clone https://github.com/MasaiasuOse/binance-trade-bot.git"
+        	BinanceBotVersion="MasaiasuOse master"
+		echo "Binance trading bot will be installed with ${BinanceBot}"
+		break
+           ;;   
         "Specific Branch")
 		BinanceBot="git clone -b websockets-idkravitz --single-branch https://github.com/idkravitz/binance-trade-bot.git"
         	BinanceBotVersion="Specif branch"
