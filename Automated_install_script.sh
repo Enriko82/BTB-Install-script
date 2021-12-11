@@ -85,7 +85,7 @@ Installversion=Enriko82_Full_1.11_22-11-2021
 # 
 #
 PS3='Please enter your choice: '
-options=("Edeng32 Master" "Idkravitz master" "TnTwist master" "Mila432 (Homersimpson) master" "Specific Branch" "Quit")
+options=("Edeng32 Master" "Idkravitz master" "TnTwist master" "Mila432 (Homersimpson) master" "MasaiasuOse master" "Specific Branch" "Quit")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -113,6 +113,12 @@ do
 		echo "Binance trading bot will be installed with ${BinanceBot}"
 		break
            ;;	   
+		"MasaiasuOse master")
+            	BinanceBot="git clone https://github.com/MasaiasuOse/binance-trade-bot.git"
+        	BinanceBotVersion="MasaiasuOse master"
+		echo "Binance trading bot will be installed with ${BinanceBot}"
+		break
+           ;;   
         "Specific Branch")
 		BinanceBot="git clone -b websockets-idkravitz --single-branch https://github.com/idkravitz/binance-trade-bot.git"
         	BinanceBotVersion="Specif branch"
