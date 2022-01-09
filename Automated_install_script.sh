@@ -24,10 +24,14 @@
 # Set here in which folder you would like the Bot to be installed:
 # By default the bot will be installed in the subfolder Binance1
 BinanceFolder=Binance1
+#
 # Update in the end of this file below the following chapters, by completing the data needed
 # 1) Fill in below your user.cfg details.
 # 2) Fill in below your supported coins, which you would like to trade
 # 3) Fill in below your Telegram Bot ID's
+# The telegram bot currently supports multiple languages. Default is en (English). New are fr(ench) or ru(ssian)
+# https://github.com/lorcalhost/BTB-manager-telegram#language-setting
+TGLang=en
 # Run the following commands in the SSH client
 # For ubuntu shape the following must be done first:
 # 				sudo apt-get update
@@ -61,9 +65,12 @@ BinanceFolder=Binance1
 # 1.8 23-06-2021 Added Oracle Ubuntu 20.04 (python 3.8.5) which can include TA-Lib and Mathlab for Crypto charts
 # 1.9 27-06-2021 Bugfixes of variable. Added warmup in custom script.
 # 1.10 13-09-2021 Commented out TAlib install. Merged fix for database warmup and restorecon of services
-# 1.11 18-10-2021 Updated Binance chart plugin details and TNTwist variables
+# 1.11 22-11-2021 Added multi language support for Telegram and auto startup. Updated user.cfg default variables.
+# 1.12 11-12-2021 Added MasaiasuOse to the selectable forks
+# 1.13 09-01-2022 Updated Binance chart plugin details and TNTwist variables
 #
-Installversion=Enriko82_Full_1.11_18-10-2021 
+Installversion=Enriko82_Full_1.13_09-01-2022
+
 # More information about the Binance Trade Bot can be found here
 # https://github.com/edeng23/binance-trade-bot
 # If you like the Binance trade Bot. Please go to here to support:
@@ -81,7 +88,7 @@ Installversion=Enriko82_Full_1.11_18-10-2021
 # 
 #
 PS3='Please enter your choice: '
-options=("Edeng32 Master" "Idkravitz master" "TnTwist master" "Mila432 (Homersimpson) master" "Specific Branch" "Quit")
+options=("Edeng32 Master" "Idkravitz master" "TnTwist master" "Mila432 (Homersimpson) master" "MasaiasuOse master" "Specific Branch" "Quit")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -109,6 +116,12 @@ do
 		echo "Binance trading bot will be installed with ${BinanceBot}"
 		break
            ;;	   
+		"MasaiasuOse master")
+            	BinanceBot="git clone https://github.com/MasaiasuOse/binance-trade-bot.git"
+        	BinanceBotVersion="MasaiasuOse master"
+		echo "Binance trading bot will be installed with ${BinanceBot}"
+		break
+           ;;   
         "Specific Branch")
 		BinanceBot="git clone -b websockets-idkravitz --single-branch https://github.com/idkravitz/binance-trade-bot.git"
         	BinanceBotVersion="Specif branch"
@@ -426,7 +439,7 @@ Description=${DescriptionTelegram}
 After=network.target BTB${BinanceFolder}.service
 
 [Service]
-ExecStart=/usr/bin/python3 -u -m btb_manager_telegram -p "../binance-trade-bot"
+ExecStart=/usr/bin/python3 -u -m btb_manager_telegram -s -p "../binance-trade-bot" -l ${TGLang}
 WorkingDirectory=${WorkingDirectoryTelegram}
 StandardOutput=inherit
 StandardError=inherit
@@ -462,7 +475,9 @@ current_coin=
 bridge=USDT
 tld=com
 hourToKeepScoutHistory=1
+use_margin=no
 scout_multiplier=5
+scout_margin=0.8
 scout_sleep_time=1
 strategy=multiple_coins
 buy_timeout=10
@@ -470,13 +485,11 @@ sell_timeout=10
 buy_order_type=limit
 sell_order_type=market
 #AdditionalParameters=Below_is_only_for_TnTwist_Master
+enable_paper_trading=False
 sell_max_price_change=0.005
 buy_max_price_change=0.005
 trade_fee=auto
 price_type=orderbook
-accept_losses=false
-max_idle_hours=72
-ratio_adjust_weight=500
 auto_adjust_bnb_balance=false
 auto_adjust_bnb_balance_rate=3
 #BinanceBotVersion=${BinanceBotVersion}
