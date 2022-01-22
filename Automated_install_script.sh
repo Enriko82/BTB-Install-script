@@ -67,8 +67,10 @@ TGLang=en
 # 1.10 13-09-2021 Commented out TAlib install. Merged fix for database warmup and restorecon of services
 # 1.11 22-11-2021 Added multi language support for Telegram and auto startup. Updated user.cfg default variables.
 # 1.12 11-12-2021 Added MasaiasuOse to the selectable forks
+# 1.13 09-01-2022 Updated Binance chart plugin details and TNTwist variables
 #
-Installversion=Enriko82_Full_1.12_11-12-2021 
+Installversion=Enriko82_Full_1.13_09-01-2022
+
 # More information about the Binance Trade Bot can be found here
 # https://github.com/edeng23/binance-trade-bot
 # If you like the Binance trade Bot. Please go to here to support:
@@ -253,22 +255,6 @@ git init
 $BinanceBot
 git clone https://github.com/lorcalhost/BTB-manager-telegram.git
 
-
-##################################################################
-# Check if TA-lib is needed. If yes then prepare data. Works only with Python 3.7+
-# Removed temporary as it is not installing correctly
-# if grep -iFq "TA-lib" "${WorkingDirectoryBot}/requirements.txt" ; then
-# echo "Downloading TA-lib files"
-# wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz
-# tar -xzf ta-lib-0.4.0-src.tar.gz
-# cd ta-lib/
-# ./configure --prefix=/usr
-# make
-# sudo make install
-# pip3 install TA-Lib
-# cd ..
-# fi
-# End TA-Lib preperation 
 ##################################################################
 # Install requirements of bots
 cd binance-trade-bot
@@ -293,8 +279,10 @@ git clone https://github.com/marcozetaa/binance-chart-plugin-telegram-bot.git
 # Create config file for Binance chart plugin
 cat <<EOF >${WorkingDirectoryBTBChart}/config
 [config]
-bot_path=${WorkingDirectoryBot}
-min_timestamp = 0
+bot_path = /../binance-trade-bot
+# Date format: YYYY-MM-DD
+min_datetime = 2021-01-01
+bridge_binance = USDT
 EOF
 cd binance-chart-plugin-telegram-bot
 pip3 install -r requirements.txt
@@ -306,7 +294,8 @@ cat <<EOF >${WorkingDirectoryTelegram}/config/custom_scripts.json
   "💰 Current coin progress": "custom_scripts/current_coin_progress.sh",
   "💰 All coins progress": "custom_scripts/all_coins_progress.sh",
   "🦸 Appreciate Masa": "echo Masa is great",
-  "Crypto chart": "python3 ../binance-chart-plugin-telegram-bot/db_chart.py",
+  "Crypto chart from Binance": "bash -c 'cd .. && python3 binance-chart-plugin-telegram-bot -bn'",
+  "Crypto chart from database": "bash -c 'cd .. && python3 binance-chart-plugin-telegram-bot -db'",
   "Update crypto chart": "bash -c 'cd ../binance-chart-plugin-telegram-bot && git pull'",
   "Database warmup": "cd ../binance-trade-bot && python3 database_warmup.py"
 }
@@ -436,7 +425,6 @@ User=${UserBot}
 WantedBy=multi-user.target
 EOF
 sudo mv BTB${BinanceFolder}.service /etc/systemd/system/BTB${BinanceFolder}.service
-restorecon /etc/systemd/system/BTB${BinanceFolder}.service
 sudo systemctl start BTB${BinanceFolder}.service
 sudo systemctl enable BTB${BinanceFolder}.service
 
@@ -462,7 +450,6 @@ User=${UserBot}
 WantedBy=multi-user.target
 EOF
 sudo mv BTBTelegram${BinanceFolder}.service /etc/systemd/system/BTBTelegram${BinanceFolder}.service
-restorecon /etc/systemd/system/BTBTelegram${BinanceFolder}.service
 sudo systemctl start BTBTelegram${BinanceFolder}.service
 sudo systemctl enable BTBTelegram${BinanceFolder}.service
 
@@ -488,7 +475,7 @@ current_coin=
 bridge=USDT
 tld=com
 hourToKeepScoutHistory=1
-use_margin=no
+use_margin=False
 scout_multiplier=5
 scout_margin=0.8
 scout_sleep_time=1
@@ -536,7 +523,7 @@ EOF
 
 ##################################################################
 # 3) Fill in below your Telegram Bot ID's
-#
+# Fill in the details at the line with - tgram://TOKEN/CHAT_ID
 
 
 cat <<EOF >${WorkingDirectoryBot}/config/apprise.yml
