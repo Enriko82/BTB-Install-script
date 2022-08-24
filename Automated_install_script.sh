@@ -518,7 +518,7 @@ cat <<EOF >${WorkingDirectoryBot}/supported_coin_list
 ADA
 ATOM
 BAT
-BTT
+BTTC
 DASH
 EOS
 ETC
